@@ -46,7 +46,22 @@ public:
 
 	Date& operator--();
 
+	void Count_month();
+
+	void Count_year();
+
 	Date operator+(int num);
 
+	void Count_month_minus();
+
+	void Year_minus();
+
+	Date operator-(int num);
+	//Date operator-(const Date& obj);
+	Date& operator+=(int a);
+	Date& operator-=(int num);
+	bool operator<(const Date& obj)const;
+	bool operator>(const Date& obj) const;
+	bool operator<=(const Date& obj) const;
 };
 

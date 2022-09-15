@@ -9,15 +9,15 @@ Date::Date()
 }
 Date::Date(int d)
 {
-	d = day;
+	day = d;
 }
 Date::Date(int d, int m) :Date(d)
 {
-	m = month;
+	month = m;
 }
 Date::Date(int d, int m, int y) : Date(d, m)
 {
-	y = year;
+	year = y;
 }
 ///
 void Date::Print()
@@ -155,6 +155,7 @@ void Date::Func_Month()
 	{
 	case JAN:
 		month = FEB;
+		break;
 	case MAR:
 		month = APR;
 		break;
@@ -271,8 +272,8 @@ Date& Date::operator--()
 {
 	if (day == 1)
 	{
-	Day_Minus();
-	return *this;
+		Day_Minus();
+		return *this;
 	}
 	else
 	{
@@ -281,9 +282,410 @@ Date& Date::operator--()
 	}
 }
 ///
+void Date::Count_month()
+{
+	switch (month)
+	{
+	case JAN:
+		month = FEB;
+		day = 1;
+		break;
+	case FEB:
+		month = MAR;
+		day = 1;
+		break;
+	case MAR:
+		month = APR;
+		day = 1;
+		break;
+	case APR:
+		month = MAY;
+		day = 1;
+		break;
+	case MAY:
+		month = JUN;
+		day = 1;
+		break;
+	case JUN:
+		month = JUL;
+		day = 1;
+		break;
+	case JUL:
+		month = AUG;
+		day = 1;
+		break;
+	case AUG:
+		month = SEP;
+		day = 1;
+		break;
+	case SEP:
+		month = OCT;
+		day = 1;
+		break;
+	case OCT:
+		month = NOV;
+		day = 1;
+		break;
+	case NOV:
+		month = DEC;
+		day = 1;
+		break;
+	}
+}
+void Date::Count_year()
+{
+	day = 1;
+	year++;
+	month = JAN;
+}
 Date Date::operator+(int num)
 {
+	Date res;
+	res.day = day;
+	res.month = month;
+	res.year = year;
+	for (int i = 0; i < num; i++)
+	{
+		if (res.month == APR || res.month == JUN || res.month == SEP || res.month == NOV)
+		{
+			if (res.day == 30)
+			{
+				res.Count_month();
+				continue;
+			}
+			res.day++;
+			continue;
+		}
+		if (res.month == FEB)
+		{
+			if (fouryear() == 1)
+			{
+				if (res.day == 29)
+				{
+					res.Count_month();
+					continue;
+				}
+				res.day++;
+				continue;
+			}
+			if (res.day == 28)
+			{
+				res.Count_month();
+				continue;
+			}
+			res.day++;
+			continue;
+		}
+		if (res.month == DEC)
+		{
+			if (res.day == 31)
+			{
+				res.Count_year();
+				continue;
+			}
+			res.day++;
+			continue;
+		}
+		if (res.month == JAN || res.month == MAR || res.month == MAY || res.month == JUL || res.month == AUG || res.month == OCT)
+		{
+			if (res.day == 31)
+			{
+				res.Count_month();
+				continue;
+			}
+			res.day++;
+			continue;
+		}
+	}
+	return res;
+}
+///
+void Date::Count_month_minus()
+{
+	switch (month)
+	{
+	case DEC:
+		month = NOV;
+		day = 30;
+		break;
+	case NOV:
+		month = OCT;
+		day = 31;
+		break;
+	case OCT:
+		month = SEP;
+		day = 30;
+		break;
+	case SEP:
+		month = AUG;
+		day = 31;
+		break;
+	case AUG:
+		month = JUL;
+		day = 31;
+		break;
+	case JUL:
+		month = JUN;
+		day = 30;
+		break;
+	case JUN:
+		month = MAY;
+		day = 31;
+		break;
+	case MAY:
+		month = APR;
+		day = 30;
+		break;
+	case APR:
+		month = MAR;
+		day = 31;
+		break;
+	case FEB:
+		month = JAN;
+		day = 31;
+		break;
+	}
+}
+void Date::Year_minus()
+{
+	year--;
+	month = DEC;
+	day = 31;
+}
+Date Date::operator-(int num)
+{
+	Date res;
+	res.day = day;
+	res.month = month;
+	res.year = year;
+	for (int i = 0; i < num; i++)
+	{
+		if (res.month == MAR)
+		{
+			if (res.day == 1)
+			{
+				if (fouryear() == 1)
+				{
+					res.day = 29;
+					res.month = FEB;
+					continue;
+				}
+				res.month = FEB;
+				res.day = 28;
+				continue;
+			}
+			res.day--;
+			continue;
+		}
+		else if (res.month == JAN)
+		{
+			if (res.day == 1)
+			{
+				res.Year_minus();
+				continue;
+			}
+			res.day--;
+			continue;
+		}
+		else
+		{
+			if (res.day == 1)
+			{
+				res.Count_month_minus();
+				continue;
+			}
+			res.day--;
+			continue;
+		}
+	}
+	return res;
+}
+///
+/*Date Date::operator-(const Date& obj)
+{
+	double y, y1;
+	double res,res1;
+	if (fouryear() == 1)
+	{
+		y1 = obj.year * 366;
+		y = year * 366;
+	}
+	else
+	{
+		y1 = obj.year * 365;
+		y = year * 365;
+	}
+	double m = month * 30.5;
+	res = day + m + y;
+	double m1 = obj.month * 30.5;
+	res1 = obj.day + m1 + y1;
+	int allRes;
+	allRes = res - res1;
 
+}*/
+///
+Date& Date::operator+=(int num)
+{
+	for (int i = 0; i < num; i++)
+	{
+		if (month == APR || month == JUN || month == SEP || month == NOV)
+		{
+			if (day == 30)
+			{
+				Count_month();
+				continue;
+			}
+			day++;
+			continue;
+		}
+		if (month == FEB)
+		{
+			if (fouryear() == 1)
+			{
+				if (day == 29)
+				{
+					Count_month();
+					continue;
+				}
+				day++;
+				continue;
+			}
+			if (day == 28)
+			{
+				Count_month();
+				continue;
+			}
+			day++;
+			continue;
+		}
+		if (month == DEC)
+		{
+			if (day == 31)
+			{
+				Count_year();
+				continue;
+			}
+			day++;
+			continue;
+		}
+		if (month == JAN || month == MAR || month == MAY || month == JUL || month == AUG || month == OCT)
+		{
+			if (day == 31)
+			{
+				Count_month();
+				continue;
+			}
+			day++;
+			continue;
+		}
+	}
+	return *this;
 }
 
+Date& Date::operator-=(int num)
+{
+	for (int i = 0; i < num; i++)
+	{
+		if (month == MAR)
+		{
+			if (day == 1)
+			{
+				if (fouryear() == 1)
+				{
+					day = 29;
+					month = FEB;
+					continue;
+				}
+				month = FEB;
+				day = 28;
+				continue;
+			}
+			day--;
+			continue;
+		}
+		else if (month == JAN)
+		{
+			if (day == 1)
+			{
+				Year_minus();
+				continue;
+			}
+			day--;
+			continue;
+		}
+		else
+		{
+			if (day == 1)
+			{
+				Count_month_minus();
+				continue;
+			}
+			day--;
+			continue;
+		}
+	}
+	return *this;
+}
 
+bool Date::operator<(const Date& obj)const
+{
+	if (year < obj.year)
+	{
+		return true;
+	}
+	else if (year == obj.year)
+	{
+		if (month < obj.month)
+		{
+			return true;
+		}
+		else if (month == obj.month)
+		{
+			if (day < obj.day)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool Date::operator>(const Date& obj)const
+{
+	if (year > obj.year)
+	{
+		return true;
+	}
+	else if (year == obj.year)
+	{
+		if (month > obj.month)
+		{
+			return true;
+		}
+		else if (month == obj.month)
+		{
+			if (day > obj.day)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool Date::operator<=(const Date& obj)const
+{
+	if (year > obj.year)
+	{
+		return false;
+	}
+	else if (month > obj.month)
+	{
+		return false;
+	}
+	else if (day > obj.day)
+	{
+		{
+			return false;
+		}
+	}
+return true;
+}
