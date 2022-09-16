@@ -36,6 +36,8 @@ public:
 
 	Date& operator++();
 
+	Date operator++(int);
+
 	//void Day_30M();
 
 	void Jun_1();
@@ -43,6 +45,8 @@ public:
 	void Mart_1();
 
 	void Day_Minus();
+
+	Date operator--(int);
 
 	Date& operator--();
 
@@ -57,11 +61,14 @@ public:
 	void Year_minus();
 
 	Date operator-(int num);
-	//Date operator-(const Date& obj);
+	//Date operator-(Date& obj);
 	Date& operator+=(int a);
 	Date& operator-=(int num);
 	bool operator<(const Date& obj)const;
 	bool operator>(const Date& obj) const;
 	bool operator<=(const Date& obj) const;
+	bool operator>=(const Date& obj) const;
+	bool operator==(const Date& obj) const;
+	bool operator!=(const Date& obj) const;
 };
 

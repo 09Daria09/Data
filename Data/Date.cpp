@@ -10,10 +10,13 @@ Date::Date()
 Date::Date(int d)
 {
 	day = d;
+	month = 0;
+	year = 0;
 }
 Date::Date(int d, int m) :Date(d)
 {
 	month = m;
+	year = 0;
 }
 Date::Date(int d, int m, int y) : Date(d, m)
 {
@@ -191,6 +194,25 @@ void Date::Func_Year()
 	year = year + 1;
 	month = JAN;
 }
+Date Date::operator++(int)
+{
+	Date def(*this);
+	if (month == APR || month == JUN || month == SEP || month == NOV)
+	{
+		Day_30();
+		return def;
+	}
+	else if (month == FEB)
+	{
+		Febfun();
+		return def;
+	}
+	else
+	{
+		Day_31();
+		return def;
+	}
+}
 Date& Date::operator++()
 {
 	if (month == APR || month == JUN || month == SEP || month == NOV)
@@ -266,6 +288,20 @@ void Date::Day_Minus()
 			month--;
 			day = 31;
 		}
+	}
+}
+Date Date::operator--(int)
+{
+	Date def(*this);
+	if (day == 1)
+	{
+		Day_Minus();
+		return def;
+	}
+	else
+	{
+		day--;
+		return def;
 	}
 }
 Date& Date::operator--()
@@ -501,26 +537,92 @@ Date Date::operator-(int num)
 	return res;
 }
 ///
-/*Date Date::operator-(const Date& obj)
+/*Date Date::operator-(Date& obj)
 {
+	int allday=0;
+	int countmonth=0;
+	int countmonth1 = 0;
+	//double highY, highY1;
 	double y, y1;
 	double res,res1;
-	if (fouryear() == 1)
+	float highY = (float)year / 4;
+	float highY1 = (float)obj.year / 4;
+	y = highY+ (year * 365);
+	y1 = highY1 + (obj.year * 365);
+	int sim_month=month;
+	int sim_month1 = obj.month;
+	for (int i = 0; i < sim_month; i++)
 	{
-		y1 = obj.year * 366;
-		y = year * 366;
+		if (month == APR || month == JUN || month == SEP || month == NOV)
+		{
+			allday = 30;
+			month--;
+		}
+		else if (month == FEB)
+		{
+			if (fouryear() == 1)
+			{
+				allday = 29;
+				month--;
+			}
+			else
+			{
+				allday = 28;
+				month--;
+			}
+		}
+		else
+		{
+			allday = 31;
+			month--;
+		}
+		countmonth += allday;
 	}
-	else
+	for (int i = 0; i < sim_month1; i++)
 	{
-		y1 = obj.year * 365;
-		y = year * 365;
+		if (month == APR || month == JUN || month == SEP || month == NOV)
+		{
+			allday = 30;
+			obj.month--;
+		}
+		else if (month == FEB)
+		{
+			if (fouryear() == 1)
+			{
+				allday = 29;
+				obj.month--;
+			}
+			else
+			{
+				allday = 28;
+				obj.month--;
+			}
+		}
+		else
+		{
+			allday = 31;
+			month--;
+		}
+		countmonth1 += allday;
 	}
-	double m = month * 30.5;
-	res = day + m + y;
-	double m1 = obj.month * 30.5;
-	res1 = obj.day + m1 + y1;
-	int allRes;
+	res = day + countmonth + y;
+	res1 = obj.day +countmonth1 + y1;
+	double allRes;
 	allRes = res - res1;
+	/*cout << allRes;
+	return allRes;
+	if (allRes < 365)
+	{
+
+	}
+	else if(allRes==356)
+	{
+
+	}
+	else if (allRes > 365)
+	{
+		allRes -= highY;
+	}
 
 }*/
 ///
@@ -581,7 +683,6 @@ Date& Date::operator+=(int num)
 	}
 	return *this;
 }
-
 Date& Date::operator-=(int num)
 {
 	for (int i = 0; i < num; i++)
@@ -626,7 +727,7 @@ Date& Date::operator-=(int num)
 	}
 	return *this;
 }
-
+///
 bool Date::operator<(const Date& obj)const
 {
 	if (year < obj.year)
@@ -673,19 +774,57 @@ bool Date::operator>(const Date& obj)const
 }
 bool Date::operator<=(const Date& obj)const
 {
+	if (year == obj.year && month == obj.month && day == obj.day)
+	{
+		return true;
+	}
+	if (year < obj.year)
+	{
+		return true;
+	}
+	if (year == obj.year && month < obj.month)
+	{
+		return true;
+	}
+	if (year == obj.year && month == obj.month && day < obj.day)
+	{
+		return true;
+	}
+	return false;
+}
+bool Date::operator>=(const Date& obj)const
+{
+	if (year == obj.year && month == obj.month && day == obj.day)
+	{
+		return true;
+	}
 	if (year > obj.year)
 	{
-		return false;
+		return true;
 	}
-	else if (month > obj.month)
+	if (year == obj.year && month > obj.month)
+	{
+		return true;
+	}
+	if (year == obj.year && month == obj.month && day > obj.day)
+	{
+		return true;
+	}
+	return false;
+}
+bool Date::operator==(const Date& obj)const
+{
+	if (year == obj.year && month == obj.month && day == obj.day)
+	{
+		return true;
+	}
+	return false;
+}
+bool Date::operator!=(const Date& obj)const
+{
+	if (year == obj.year && month == obj.month && day == obj.day)
 	{
 		return false;
 	}
-	else if (day > obj.day)
-	{
-		{
-			return false;
-		}
-	}
-return true;
+	return true;
 }
