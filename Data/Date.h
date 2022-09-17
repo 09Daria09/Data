@@ -61,7 +61,7 @@ public:
 	void Year_minus();
 
 	Date operator-(int num);
-	//Date operator-(Date& obj);
+	Date operator-(Date& obj);
 	Date& operator+=(int a);
 	Date& operator-=(int num);
 	bool operator<(const Date& obj)const;

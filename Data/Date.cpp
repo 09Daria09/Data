@@ -537,12 +537,11 @@ Date Date::operator-(int num)
 	return res;
 }
 ///
-/*Date Date::operator-(Date& obj)
+Date Date::operator-(Date& obj)
 {
 	int allday=0;
 	int countmonth=0;
 	int countmonth1 = 0;
-	//double highY, highY1;
 	double y, y1;
 	double res,res1;
 	float highY = (float)year / 4;
@@ -609,22 +608,8 @@ Date Date::operator-(int num)
 	res1 = obj.day +countmonth1 + y1;
 	double allRes;
 	allRes = res - res1;
-	/*cout << allRes;
 	return allRes;
-	if (allRes < 365)
-	{
-
-	}
-	else if(allRes==356)
-	{
-
-	}
-	else if (allRes > 365)
-	{
-		allRes -= highY;
-	}
-
-}*/
+}
 ///
 Date& Date::operator+=(int num)
 {
