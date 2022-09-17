@@ -4,6 +4,20 @@ class Date
 	int day;
 	int month;
 	int year;
+	bool fouryear() const;
+	void Print_Month();
+	void Febfun();
+	void Day_30();
+	void Day_31();
+	void Func_Month();
+	void Func_Year();
+	void Jun_1();
+	void Mart_1();
+	void Day_Minus();
+	void Count_month();
+	void Count_year();
+	void Count_month_minus();
+	void Year_minus();
 public:
 	Date();
 	Date(int d);
@@ -20,46 +34,12 @@ public:
 	void Sety();
 	///
 	enum { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC };
-	bool fouryear() const;
-
-	void Print_Month();
-
-	void Febfun();
-
-	void Day_30();
-
-	void Day_31();
-
-	void Func_Month();
-
-	void Func_Year();
 
 	Date& operator++();
-
 	Date operator++(int);
-
-	//void Day_30M();
-
-	void Jun_1();
-
-	void Mart_1();
-
-	void Day_Minus();
-
 	Date operator--(int);
-
 	Date& operator--();
-
-	void Count_month();
-
-	void Count_year();
-
 	Date operator+(int num);
-
-	void Count_month_minus();
-
-	void Year_minus();
-
 	Date operator-(int num);
 	Date operator-(Date& obj);
 	Date& operator+=(int a);
